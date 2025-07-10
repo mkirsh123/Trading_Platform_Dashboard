@@ -11,15 +11,22 @@ const BuyActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
 
-  const handleBuyClick = () => {
-    axios.post("https://trading-platform-backend-4k62.onrender.com/newOrder", {
-      name: uid,
-      qty: stockQuantity,
-      price: stockPrice,
-      mode: "BUY",
-    });
-
-    GeneralContext.closeBuyWindow();
+  const handleBuyClick = async () => {
+    try {
+      const response = await axios.post(
+        "https://trading-platform-backend-4k62.onrender.com/newOrder",
+        {
+          name: uid,
+          qty: stockQuantity,
+          price: stockPrice,
+          mode: "BUY",
+        }
+      );
+      console.log("Order placed:", response.data);
+      GeneralContext.closeBuyWindow();
+    } catch (error) {
+      console.error("Failed to place order:", error);
+    }
   };
 
   const handleCancelClick = () => {
