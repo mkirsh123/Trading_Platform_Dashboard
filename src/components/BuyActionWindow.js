@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import axios from "axios";
@@ -10,6 +10,7 @@ import "./BuyActionWindow.css";
 const BuyActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
+  const { closeBuyWindow } = useContext(GeneralContext);
 
   const handleBuyClick = async () => {
     try {
@@ -22,15 +23,18 @@ const BuyActionWindow = ({ uid }) => {
           mode: "BUY",
         }
       );
+
+      // You can optionally check response.status or response.data here
       console.log("Order placed:", response.data);
-      GeneralContext.closeBuyWindow();
+      closeBuyWindow();
     } catch (error) {
       console.error("Failed to place order:", error);
+      // Optional: show error message to user
     }
   };
 
   const handleCancelClick = () => {
-    GeneralContext.closeBuyWindow();
+    closeBuyWindow();
   };
 
   return (
