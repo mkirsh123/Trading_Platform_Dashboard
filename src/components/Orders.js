@@ -1,63 +1,61 @@
-require("dotenv").config();
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+//import { holdings } from "../data/data";
 
-const { HoldingsModel } = require("./models/HoldingsModel");
-const { PositionsModel } = require("./models/PositionsModel");
-const { OrdersModel } = require("./models/OrdersModel");
-
-const app = express();
-const PORT = process.env.PORT || 3002;
-const uri = process.env.MONGO_URL;
-
-app.use(cors());
-app.use(bodyParser.json());
-
-app.get("/allHoldings", async (req, res) => {
-  let allHoldings = await HoldingsModel.find({});
-  res.json(allHoldings);
-});
-
-app.get("/allPositions", async (req, res) => {
-  let allPositions = await PositionsModel.find({});
-  res.json(allPositions);
-});
-
-app.get("/allOrders", async (req, res) => {
-  let allOrders = await OrdersModel.find({});
-  res.json(allOrders);
-});
-
-app.post("/newOrder", async (req, res) => {
-  let newOrder = new OrdersModel([{
-    name: req.body.name,
-    qty: req.body.qty,
-    price: req.body.price,
-    mode: req.body.mode,
-  }]);
-
-  newOrder.save();
-  temPositions.forEach((item) => {
-    let newPositions = new PositionsModel({
-      product: item.product,
-      name: item.name,
-      qty: item.qty,
-      avg: item.avg,
-      price: item.price,
-      net: item.net,
-      day: item.day,
-      isLoss: item.isLoss,
+const Orders = () => {
+  const [allOrders, setAllOrders] = useState([]);
+  useEffect(() => {
+    axios.get("http://localhost:3002/allOrders").then((res) => {
+      setAllOrders(res.data);
     });
-    newPositions.save();
-  });
-  res.send("done");
-});
+  }, []);
+  return (
+    <>
+      <h3 className="title">Orders ({allOrders.length})</h3>
 
-app.listen(PORT, () => {
-  console.log(`app started on the port ${PORT}`);
-  mongoose.connect(uri);
-  console.log("DB Started!");
-});
+      <div className="order-table">
+        <table>
+          <tr>
+            <th>Instrument</th>
+            <th>Qty.</th>
+            <th>Price</th>
+            <th>Mode</th>
+          </tr>
+
+          {allOrders.map((order, index) => {
+            return (
+              <tr key={index}>
+                <td>{order.name}</td>
+                <td>{order.qty}</td>
+                <td>{order.price}</td>
+                <td>{order.mode}</td>
+              </tr>
+            );
+          })}
+        </table>
+      </div>
+
+      <div className="row">
+        <div className="col">
+          <h5>
+            29,875.<span>55</span>{" "}
+          </h5>
+          <p>Total investment</p>
+        </div>
+        <div className="col">
+          <h5>
+            31,428.<span>95</span>{" "}
+          </h5>
+          <p>Current value</p>
+        </div>
+        <div className="col">
+          <h5>1,553.40 (+5.20%)</h5>
+          <p>P&L</p>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Orders;
