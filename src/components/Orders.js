@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useContext } from "react";
+import GeneralContext from "./GeneralContext";
 
 //import { holdings } from "../data/data";
 
 const Orders = () => {
-  const [allOrders, setAllOrders] = useState([]);
+  const { allOrders, refreshOrders } = useContext(GeneralContext);
+  // if you still need local state you could use it, but context holds orders
   useEffect(() => {
-    axios.get("http://localhost:3002/allOrders").then((res) => {
-      setAllOrders(res.data);
-    });
-  }, []);
+    refreshOrders();
+  }, [refreshOrders]);
   return (
     <>
       <h3 className="title">Orders ({allOrders.length})</h3>
