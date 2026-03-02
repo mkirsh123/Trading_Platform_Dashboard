@@ -10,26 +10,24 @@ import "./BuyActionWindow.css";
 const BuyActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
-  const { closeBuyWindow } = useContext(GeneralContext);
+  const { closeBuyWindow, addOrder, refreshOrders } = useContext(GeneralContext);
 
   const handleBuyClick = async () => {
     try {
-      const response = await axios.post(
-        "https://trading-platform-backend-4k62.onrender.com/newOrder",
-        {
-          name: uid,
-          qty: stockQuantity,
-          price: stockPrice,
-          mode: "BUY",
-        }
-      );
-
-      // You can optionally check response.status or response.data here
+      const response = await axios.post("http://localhost:3002/newOrder", {
+        name: uid,
+        qty: stockQuantity,
+        price: stockPrice,
+        mode: "BUY",
+      });
       console.log("Order placed:", response.data);
+      // update context state so pages refresh
+      addOrder(response.data);
+      // also re-fetch in case backend changed other orders
+      refreshOrders();
       closeBuyWindow();
     } catch (error) {
       console.error("Failed to place order:", error);
-      // Optional: show error message to user
     }
   };
 
