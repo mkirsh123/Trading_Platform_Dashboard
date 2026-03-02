@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {useEffect, useContext } from "react";
 import GeneralContext from "./GeneralContext";
 
 //import { holdings } from "../data/data";
