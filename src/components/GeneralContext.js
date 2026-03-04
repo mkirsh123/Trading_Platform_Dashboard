@@ -28,7 +28,7 @@ export const GeneralContextProvider = (props) => {
 
   const refreshOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:3002/allOrders");
+      const res = await axios.get("https://trading-platform-backend-4k62.onrender.com/allOrders");
       setAllOrders(res.data);
     } catch (err) {
       console.error("Failed to fetch orders:", err);
@@ -61,3 +61,4 @@ export const GeneralContextProvider = (props) => {
 };
 
 export default GeneralContext;
+
