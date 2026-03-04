@@ -14,7 +14,7 @@ const BuyActionWindow = ({ uid }) => {
 
   const handleBuyClick = async () => {
     try {
-      const response = await axios.post("http://localhost:3002/newOrder", {
+      const response = await axios.post("https://trading-platform-backend-4k62.onrender.com/newOrder", {
         name: uid,
         qty: stockQuantity,
         price: stockPrice,
@@ -79,3 +79,4 @@ const BuyActionWindow = ({ uid }) => {
 };
 
 export default BuyActionWindow;
+
